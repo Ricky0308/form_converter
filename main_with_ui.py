@@ -1,3 +1,4 @@
+import fitz
 import os
 import uuid
 import pandas as pd
@@ -48,6 +49,16 @@ def convert_excel_to_pdf(excel_file_path):
         html_content = markdown(md_content)
         pdf_file_path = os.path.join(output_dir, f"{sanitized_file_name}.pdf")
         HTML(string=html_content).write_pdf(pdf_file_path, stylesheets=[css_path], presentational_hints=True)
+
+        # 元のPDFを開く
+        doc = fitz.open(pdf_file_path)
+        
+        # 新しいファイルパス
+        output_file_path = pdf_file_path.replace(".pdf", "_new.pdf")
+
+        # PDFを再保存（Adobe Acrobat 互換）
+        doc.save(output_file_path)
+
 
     messagebox.showinfo("Success", f"PDFs saved in folder: {output_dir}")
 
