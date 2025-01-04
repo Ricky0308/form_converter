@@ -7,7 +7,7 @@ from weasyprint import HTML
 from datetime import datetime
 from tkinter import Tk, filedialog, messagebox
 
-def convert_excel_to_pdf(excel_file_path):
+def convert_excel_to_html(excel_file_path):
     # Step 1: Read the Excel file
     df = pd.read_excel(excel_file_path)
 
@@ -30,37 +30,18 @@ def convert_excel_to_pdf(excel_file_path):
 
         sanitized_file_name = str(file_name).replace("/", "-").replace("\\", "-")
 
-        # Create Markdown content
-        md_content = """\
-"""
+        # Create HTML content
+        html_content = """<html><head><meta charset='UTF-8'><title>Document</title></head><body>"""
         for col_name, cell_value in row.items():
-            md_content += f"## {col_name}\n{cell_value if pd.notna(cell_value) else ''}\n\n"
+            html_content += f"<h2>{col_name}</h2><p>{cell_value if pd.notna(cell_value) else ''}</p>"
+        html_content += """</body></html>"""
 
-        # Save Markdown file
-        md_file_path = os.path.join(output_dir, f"{sanitized_file_name}.md")
-        with open(md_file_path, "w", encoding="utf-8") as md_file:
-            md_file.write(md_content)
+        # Save HTML file
+        html_file_path = os.path.join(output_dir, f"{sanitized_file_name}.html")
+        with open(html_file_path, "w", encoding="utf-8") as html_file:
+            html_file.write(html_content)
 
-        # Convert Markdown to HTML and then PDF
-        # CSS を適用する
-        css_path = os.path.join(current_dir, "main.css")
-
-        # Convert Markdown to HTML with CSS and then PDF
-        html_content = markdown(md_content)
-        pdf_file_path = os.path.join(output_dir, f"{sanitized_file_name}.pdf")
-        HTML(string=html_content).write_pdf(pdf_file_path, stylesheets=[css_path], presentational_hints=True)
-
-        # 元のPDFを開く
-        doc = fitz.open(pdf_file_path)
-        
-        # 新しいファイルパス
-        output_file_path = pdf_file_path.replace(".pdf", "_new.pdf")
-
-        # PDFを再保存（Adobe Acrobat 互換）
-        doc.save(output_file_path)
-
-
-    messagebox.showinfo("Success", f"PDFs saved in folder: {output_dir}")
+    messagebox.showinfo("Success", f"HTML files saved in folder: {output_dir}")
 
 def main():
     root = Tk()
@@ -76,7 +57,7 @@ def main():
         return
 
     try:
-        convert_excel_to_pdf(excel_file)
+        convert_excel_to_html(excel_file)
     except Exception as e:
         messagebox.showerror("Error", f"An error occurred: {e}")
 
