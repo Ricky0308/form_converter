@@ -41,9 +41,26 @@ def convert_excel_to_pdf(excel_file_path):
             md_file.write(md_content)
 
         # Convert Markdown to HTML and then PDF
+        # CSS を適用する
+        css = """
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12pt;
+            line-height: 1.6;
+        }
+        h1, h2, h3 {
+            font-family: Arial, sans-serif;
+        }
+        """
+
+        # Convert Markdown to HTML with CSS and then PDF
         html_content = markdown(md_content)
         pdf_file_path = os.path.join(output_dir, f"{sanitized_file_name}.pdf")
-        HTML(string=html_content).write_pdf(pdf_file_path)
+        HTML(string=html_content).write_pdf(pdf_file_path, stylesheets=[css])
 
     messagebox.showinfo("Success", f"PDFs saved in folder: {output_dir}")
 
