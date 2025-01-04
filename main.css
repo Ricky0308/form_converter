@@ -1,0 +1,12 @@
+@page {
+    size: A4;
+    margin: 2cm;
+}
+body {
+    font-family: Arial, sans-serif;
+    font-size: 12pt;
+    line-height: 1.6;
+}
+h1, h2, h3 {
+    font-family: Arial, sans-serif;
+}
